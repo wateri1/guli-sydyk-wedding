@@ -785,6 +785,15 @@
           min-height: 180px;
         }
 
+        .details-header {
+          grid-template-columns: 1fr;
+          align-items: start;
+        }
+
+        .details-header p {
+          max-width: 560px;
+        }
+
         .photo-pair figure:nth-child(2) {
           transform: none;
         }
@@ -855,8 +864,7 @@
         }
 
         .details-header {
-          align-items: flex-start;
-          flex-direction: column;
+          gap: 18px;
         }
 
         .map-copy {
