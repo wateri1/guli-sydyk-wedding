@@ -14,20 +14,8 @@
       href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:wght@500;600;700&family=Marck+Script&family=Ysabeau:wght@400;500;600;700&display=swap"
       rel="stylesheet"
     />
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      integrity="sha256-p4NxAoJBhIINfQmVL3/36w4ABfIIp4Az6Z8Q2K1Q+6A="
-      crossorigin=""
-    />
     <script
       src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"
-      defer
-    ></script>
-    <script
-      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
-      crossorigin=""
       defer
     ></script>
     <style>
@@ -629,28 +617,11 @@
         background: #eadfcd;
       }
 
-      #map {
+      .map-iframe {
         width: 100%;
         height: 100%;
-        min-height: 0;
-      }
-
-      .leaflet-container {
-        font-family: "Ysabeau", "Trebuchet MS", sans-serif;
-      }
-
-      .leaflet-popup-content-wrapper,
-      .leaflet-popup-tip {
-        color: var(--ink);
-        background: var(--porcelain);
-      }
-
-      .popup-title {
-        margin: 0 0 6px;
-        color: var(--deep-gold);
-        font-family: "Cormorant Infant", Georgia, serif;
-        font-size: 24px;
-        font-weight: 700;
+        display: block;
+        border: 0;
       }
 
       .map-link {
@@ -789,7 +760,7 @@
         }
 
         .map-frame,
-        #map {
+        .map-iframe {
           height: 430px;
           min-height: 430px;
         }
@@ -977,7 +948,14 @@
             </a>
           </div>
           <div class="map-frame" data-reveal>
-            <div id="map" aria-label="Интерактивная карта SADEA"></div>
+            <iframe
+              class="map-iframe"
+              title="Карта проезда к SADEA"
+              src="https://www.google.com/maps?q=43.216609,76.898017&z=16&output=embed"
+              loading="lazy"
+              allowfullscreen
+              referrerpolicy="no-referrer-when-downgrade"
+            ></iframe>
           </div>
         </div>
       </section>
@@ -991,7 +969,6 @@
     </main>
 
     <script>
-      const locationUrl = "https://2gis.kz/almaty/geo/70000001099177536/76.898017,43.216609";
       const eventDate = new Date("2026-07-11T17:00:00+05:00");
 
       function initIcons() {
@@ -1036,42 +1013,6 @@
           const element = document.getElementById(key);
           if (element) element.textContent = String(value).padStart(2, "0");
         });
-      }
-
-      function initMap() {
-        if (!window.L) return;
-
-        const coords = [43.216609, 76.898017];
-        const map = window.L.map("map", {
-          dragging: true,
-          doubleClickZoom: true,
-          scrollWheelZoom: true,
-          tap: true,
-          touchZoom: true,
-          zoomControl: true
-        }).setView(coords, 15);
-
-        window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-          maxZoom: 19,
-          attribution: "&copy; OpenStreetMap"
-        }).addTo(map);
-
-        const goldIcon = window.L.divIcon({
-          className: "gold-map-marker",
-          html:
-            "<div style='width:34px;height:34px;border-radius:50%;background:#8d641b;border:4px solid #fffaf0;box-shadow:0 10px 22px rgba(61,45,26,.32);'></div>",
-          iconSize: [34, 34],
-          iconAnchor: [17, 17]
-        });
-
-        const marker = window.L.marker(coords, { icon: goldIcon }).addTo(map);
-        marker.bindPopup(`
-          <p class="popup-title">SADEA</p>
-          <div>пр. Серкебаева, 220а</div>
-          <a class="map-link" href="${locationUrl}" target="_blank" rel="noopener noreferrer">Открыть в 2ГИС</a>
-        `);
-        marker.on("click", () => marker.openPopup());
-        setTimeout(() => map.invalidateSize(), 250);
       }
 
       function initMusic() {
@@ -1144,10 +1085,7 @@
         updateCountdown();
         setInterval(updateCountdown, 1000);
 
-        window.addEventListener("load", () => {
-          initIcons();
-          initMap();
-        });
+        window.addEventListener("load", initIcons);
       });
     </script>
   </body>
