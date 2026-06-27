@@ -245,6 +245,8 @@
         font-size: clamp(48px, 9vw, 104px);
         font-weight: 400;
         line-height: 0.95;
+        overflow-wrap: normal;
+        word-break: normal;
       }
 
       .hero-meta {
@@ -768,7 +770,8 @@
         }
 
         .hero {
-          min-height: 84svh;
+          min-height: 100svh;
+          align-items: center;
         }
 
         .brand span {
@@ -776,11 +779,48 @@
         }
 
         .hero-content {
-          padding-bottom: 36px;
+          min-height: calc(100svh - 44px);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 104px 0 34px;
+          text-align: center;
+        }
+
+        .hero-copy {
+          width: 100%;
+          max-width: 360px;
+          margin: 0 auto;
+        }
+
+        .kicker {
+          justify-content: center;
+          width: 100%;
+          margin-bottom: 22px;
+          font-size: 18px;
+        }
+
+        .kicker::before {
+          width: 34px;
+        }
+
+        .hero h1 {
+          font-size: clamp(74px, 24vw, 96px);
+          line-height: 0.78;
+          text-align: center;
+          overflow-wrap: normal;
+          word-break: normal;
+        }
+
+        .hero h1 .script {
+          margin-top: 14px;
+          font-size: clamp(52px, 14vw, 62px);
+          line-height: 0.92;
         }
 
         .hero-meta {
           margin-top: 24px;
+          justify-content: center;
         }
 
         .meta-pill {
@@ -858,6 +898,8 @@
     </style>
   </head>
   <body>
+    <audio id="ceremonyMusic" src="assets/ceremony-music.wav" autoplay loop preload="auto"></audio>
+
     <main class="site-shell">
       <section class="hero" aria-label="Главный экран приглашения">
         <div class="topbar">
@@ -1083,65 +1125,73 @@
 
       function initMusic() {
         const button = document.getElementById("musicToggle");
-        let audioContext;
-        let masterGain;
-        let intervalId;
-        let playing = false;
-        let gainConnected = false;
-        const notes = [261.63, 329.63, 392.0, 523.25, 440.0, 392.0, 329.63, 293.66];
-        let index = 0;
+        const audio = document.getElementById("ceremonyMusic");
+        audio.volume = 0.42;
 
-        function playNote() {
-          if (!audioContext || !masterGain) return;
-          const now = audioContext.currentTime;
-          const oscillator = audioContext.createOscillator();
-          const gain = audioContext.createGain();
-
-          oscillator.type = "sine";
-          oscillator.frequency.value = notes[index % notes.length];
-          index += 1;
-
-          gain.gain.setValueAtTime(0, now);
-          gain.gain.linearRampToValueAtTime(0.08, now + 0.05);
-          gain.gain.exponentialRampToValueAtTime(0.001, now + 1.15);
-
-          oscillator.connect(gain);
-          gain.connect(masterGain);
-          oscillator.start(now);
-          oscillator.stop(now + 1.2);
+        function updateMusicButton() {
+          if (audio.paused) {
+            button.setAttribute("aria-label", "Включить музыку");
+            button.innerHTML = '<i data-lucide="music-2" aria-hidden="true"></i>';
+          } else if (audio.muted) {
+            button.setAttribute("aria-label", "Включить звук");
+            button.innerHTML = '<i data-lucide="volume-x" aria-hidden="true"></i>';
+          } else {
+            button.setAttribute("aria-label", "Выключить звук");
+            button.innerHTML = '<i data-lucide="volume-2" aria-hidden="true"></i>';
+          }
+          initIcons();
         }
 
-        function stopMusic() {
-          playing = false;
-          clearInterval(intervalId);
-          intervalId = undefined;
-          button.setAttribute("aria-label", "Включить музыку");
-          button.innerHTML = '<i data-lucide="music-2" aria-hidden="true"></i>';
-          initIcons();
+        async function startMusic() {
+          audio.muted = false;
+          try {
+            await audio.play();
+            updateMusicButton();
+            return true;
+          } catch (error) {
+            updateMusicButton();
+            return false;
+          }
+        }
+
+        function toggleMute() {
+          audio.muted = !audio.muted;
+          updateMusicButton();
+        }
+
+        async function tryAutoplay() {
+          const started = await startMusic();
+          if (started) return;
+
+          const startAfterGesture = async (event) => {
+            if (event.target?.closest?.("#musicToggle")) return;
+            if (await startMusic()) {
+              window.removeEventListener("pointerdown", startAfterGesture);
+              window.removeEventListener("touchstart", startAfterGesture);
+              window.removeEventListener("keydown", startAfterGesture);
+            }
+          };
+
+          window.addEventListener("pointerdown", startAfterGesture, { passive: true });
+          window.addEventListener("touchstart", startAfterGesture, { passive: true });
+          window.addEventListener("keydown", startAfterGesture);
         }
 
         button.addEventListener("click", async () => {
-          if (playing) {
-            stopMusic();
+          if (audio.paused) {
+            await startMusic();
             return;
           }
 
-          audioContext = audioContext || new (window.AudioContext || window.webkitAudioContext)();
-          if (audioContext.state === "suspended") await audioContext.resume();
-          masterGain = masterGain || audioContext.createGain();
-          masterGain.gain.value = 0.45;
-          if (!gainConnected) {
-            masterGain.connect(audioContext.destination);
-            gainConnected = true;
-          }
-
-          playing = true;
-          button.setAttribute("aria-label", "Остановить музыку");
-          button.innerHTML = '<i data-lucide="pause" aria-hidden="true"></i>';
-          initIcons();
-          playNote();
-          intervalId = setInterval(playNote, 760);
+          toggleMute();
         });
+
+        audio.addEventListener("play", updateMusicButton);
+        audio.addEventListener("pause", updateMusicButton);
+        audio.addEventListener("volumechange", updateMusicButton);
+
+        updateMusicButton();
+        tryAutoplay();
       }
 
       document.addEventListener("DOMContentLoaded", () => {
