@@ -198,49 +198,7 @@
       }
 
       .gold-thread {
-        display: grid;
-        grid-template-columns: auto 1fr;
-        align-items: end;
-        gap: clamp(18px, 4vw, 42px);
-      }
-
-      .anniversary-seal {
-        width: clamp(132px, 22vw, 218px);
-        aspect-ratio: 1;
-        display: grid;
-        place-items: center;
-        flex: 0 0 auto;
-        color: #ffe7ad;
-        border: 1px solid rgba(255, 232, 173, 0.82);
-        border-radius: 50%;
-        box-shadow:
-          inset 0 0 0 10px rgba(255, 232, 173, 0.09),
-          0 24px 80px rgba(0, 0, 0, 0.22);
-      }
-
-      .seal-inner {
-        width: 78%;
-        aspect-ratio: 1;
-        display: grid;
-        place-items: center;
-        border: 1px solid rgba(255, 232, 173, 0.5);
-        border-radius: 50%;
-      }
-
-      .seal-inner span {
         display: block;
-        font-family: "Cormorant Infant", Georgia, serif;
-        font-size: clamp(56px, 10vw, 96px);
-        font-weight: 700;
-        line-height: 0.8;
-      }
-
-      .seal-inner small {
-        display: block;
-        margin-top: 8px;
-        font-size: clamp(14px, 2.8vw, 18px);
-        font-weight: 700;
-        text-transform: uppercase;
       }
 
       .hero-copy {
@@ -300,7 +258,10 @@
         display: inline-flex;
         min-height: 42px;
         align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
         gap: 9px;
+        max-width: 100%;
         padding: 9px 13px;
         color: rgba(255, 250, 240, 0.94);
         background: rgba(255, 250, 240, 0.12);
@@ -308,6 +269,13 @@
         border-radius: 999px;
         backdrop-filter: blur(12px);
         font-weight: 700;
+        line-height: 1.24;
+        text-align: center;
+        overflow-wrap: anywhere;
+      }
+
+      .meta-pill svg {
+        flex: 0 0 auto;
       }
 
       .section {
@@ -761,15 +729,10 @@
           width: min(100% - 44px, 1180px);
         }
 
-        .gold-thread,
         .invitation-layout,
         .venue-layout,
         .map-layout {
           grid-template-columns: 1fr;
-        }
-
-        .anniversary-seal {
-          width: 138px;
         }
 
         .milestone-grid {
@@ -914,24 +877,16 @@
 
         <div class="hero-content">
           <div class="gold-thread">
-            <div class="anniversary-seal" aria-label="50 лет совместной жизни">
-              <div class="seal-inner">
-                <div>
-                  <span>50</span>
-                  <small>лет</small>
-                </div>
-              </div>
-            </div>
             <div class="hero-copy">
               <p class="kicker">Золотая свадьба и юбилей</p>
               <h1>
-                Сыдык и Гуля
-                <span class="script">приглашают вас</span>
+                Мы
+                <span class="script">приглашаем вас</span>
               </h1>
               <div class="hero-meta" aria-label="Краткие данные мероприятия">
                 <span class="meta-pill"><i data-lucide="calendar-days" aria-hidden="true"></i>11 июля 2026</span>
                 <span class="meta-pill"><i data-lucide="clock-3" aria-hidden="true"></i>17:00</span>
-                <span class="meta-pill"><i data-lucide="map-pin" aria-hidden="true"></i>SADEA, Алматы</span>
+                <span class="meta-pill"><i data-lucide="map-pin" aria-hidden="true"></i>Ресторанно-банкетный комплекс SADEA</span>
               </div>
             </div>
           </div>
@@ -941,7 +896,6 @@
       <section class="section invitation" id="invitation">
         <div class="section-inner invitation-layout">
           <div class="invite-text" data-reveal>
-            <p class="section-label">Приглашение</p>
             <h2>Дорогие родные и близкие!</h2>
             <p>
               С огромной радостью приглашаем вас разделить с нами особенный день - юбилей Гули
