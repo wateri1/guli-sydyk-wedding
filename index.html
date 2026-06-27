@@ -1,0 +1,1154 @@
+<!doctype html>
+<html lang="ru">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Приглашение | Сыдык и Гуля</title>
+    <meta
+      name="description"
+      content="Приглашение на юбилей Гули и золотую свадьбу Сыдыка и Гули, 11 июля 2026, SADEA."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:wght@500;600;700&family=Marck+Script&family=Ysabeau:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIINfQmVL3/36w4ABfIIp4Az6Z8Q2K1Q+6A="
+      crossorigin=""
+    />
+    <script
+      src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"
+      defer
+    ></script>
+    <script
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+      integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+      crossorigin=""
+      defer
+    ></script>
+    <style>
+      :root {
+        --cream: #f7efe0;
+        --ivory: #fffaf0;
+        --porcelain: #fffdf8;
+        --gold: #b98b2d;
+        --deep-gold: #8d641b;
+        --ink: #3d2d1a;
+        --wine: #7e2f25;
+        --sage: #73816b;
+        --line: rgba(142, 100, 27, 0.26);
+        --shadow: 0 24px 80px rgba(72, 49, 20, 0.18);
+        --radius: 8px;
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      html {
+        scroll-behavior: smooth;
+      }
+
+      body {
+        margin: 0;
+        color: var(--ink);
+        background:
+          linear-gradient(rgba(255, 250, 240, 0.78), rgba(255, 250, 240, 0.78)),
+          url("data:image/svg+xml,%3Csvg width='72' height='72' viewBox='0 0 72 72' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 71.5H72M.5 0V72' stroke='%23c6a760' stroke-opacity='.12'/%3E%3C/svg%3E");
+        font-family: "Ysabeau", "Trebuchet MS", sans-serif;
+        font-size: 18px;
+      }
+
+      a {
+        color: inherit;
+      }
+
+      button,
+      a.button {
+        -webkit-tap-highlight-color: transparent;
+      }
+
+      .site-shell {
+        overflow: hidden;
+        background:
+          linear-gradient(90deg, rgba(185, 139, 45, 0.14), transparent 22%, transparent 78%, rgba(185, 139, 45, 0.14)),
+          transparent;
+      }
+
+      .button {
+        display: inline-flex;
+        min-height: 48px;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+        padding: 13px 20px;
+        color: var(--porcelain);
+        background: var(--deep-gold);
+        border: 1px solid var(--deep-gold);
+        border-radius: 999px;
+        font-family: "Ysabeau", "Trebuchet MS", sans-serif;
+        font-size: 17px;
+        font-weight: 700;
+        text-decoration: none;
+        cursor: pointer;
+        transition: transform 180ms ease, background 180ms ease, color 180ms ease, box-shadow 180ms ease;
+      }
+
+      .button:hover {
+        transform: translateY(-1px);
+        background: var(--gold);
+        box-shadow: 0 12px 28px rgba(141, 100, 27, 0.24);
+      }
+
+      .button:focus-visible,
+      .icon-button:focus-visible,
+      .map-link:focus-visible {
+        outline: 3px solid rgba(126, 47, 37, 0.36);
+        outline-offset: 3px;
+      }
+
+      .button.secondary {
+        color: var(--deep-gold);
+        background: rgba(255, 250, 240, 0.78);
+        border-color: rgba(185, 139, 45, 0.42);
+      }
+
+      .button.secondary:hover {
+        color: var(--ink);
+        background: var(--porcelain);
+      }
+
+      .icon-button {
+        width: 48px;
+        height: 48px;
+        display: inline-grid;
+        place-items: center;
+        color: var(--deep-gold);
+        background: rgba(255, 250, 240, 0.78);
+        border: 1px solid rgba(185, 139, 45, 0.38);
+        border-radius: 50%;
+        cursor: pointer;
+        transition: transform 180ms ease, background 180ms ease;
+      }
+
+      .icon-button:hover {
+        transform: translateY(-1px);
+        background: var(--porcelain);
+      }
+
+      .hero {
+        min-height: 88vh;
+        display: grid;
+        align-items: end;
+        position: relative;
+        isolation: isolate;
+        padding: 28px;
+        color: var(--porcelain);
+        background:
+          linear-gradient(180deg, rgba(39, 27, 12, 0.2), rgba(35, 23, 9, 0.62) 55%, rgba(35, 23, 9, 0.82)),
+          url("assets/sadea-hall.jpg") center / cover;
+      }
+
+      .hero::after {
+        content: "";
+        position: absolute;
+        inset: 18px;
+        z-index: -1;
+        border: 1px solid rgba(255, 232, 173, 0.42);
+        border-radius: var(--radius);
+      }
+
+      .topbar {
+        position: absolute;
+        top: 28px;
+        left: 50%;
+        width: min(1180px, calc(100% - 56px));
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        transform: translateX(-50%);
+      }
+
+      .brand {
+        display: inline-flex;
+        align-items: center;
+        gap: 12px;
+        color: rgba(255, 250, 240, 0.92);
+        text-decoration: none;
+      }
+
+      .brand img {
+        width: 72px;
+        height: 28px;
+        object-fit: contain;
+        padding: 3px 7px;
+        background: rgba(255, 250, 240, 0.84);
+        border-radius: 999px;
+      }
+
+      .brand span {
+        font-size: 16px;
+        font-weight: 700;
+        letter-spacing: 0;
+      }
+
+      .hero-actions {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .hero-content {
+        width: min(1180px, 100%);
+        margin: 0 auto;
+        padding: 108px 0 58px;
+      }
+
+      .gold-thread {
+        display: grid;
+        grid-template-columns: auto 1fr;
+        align-items: end;
+        gap: clamp(18px, 4vw, 42px);
+      }
+
+      .anniversary-seal {
+        width: clamp(132px, 22vw, 218px);
+        aspect-ratio: 1;
+        display: grid;
+        place-items: center;
+        flex: 0 0 auto;
+        color: #ffe7ad;
+        border: 1px solid rgba(255, 232, 173, 0.82);
+        border-radius: 50%;
+        box-shadow:
+          inset 0 0 0 10px rgba(255, 232, 173, 0.09),
+          0 24px 80px rgba(0, 0, 0, 0.22);
+      }
+
+      .seal-inner {
+        width: 78%;
+        aspect-ratio: 1;
+        display: grid;
+        place-items: center;
+        border: 1px solid rgba(255, 232, 173, 0.5);
+        border-radius: 50%;
+      }
+
+      .seal-inner span {
+        display: block;
+        font-family: "Cormorant Infant", Georgia, serif;
+        font-size: clamp(56px, 10vw, 96px);
+        font-weight: 700;
+        line-height: 0.8;
+      }
+
+      .seal-inner small {
+        display: block;
+        margin-top: 8px;
+        font-size: clamp(14px, 2.8vw, 18px);
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .hero-copy {
+        max-width: 780px;
+      }
+
+      .kicker {
+        display: inline-flex;
+        align-items: center;
+        gap: 10px;
+        margin: 0 0 16px;
+        color: #ffe9b8;
+        font-size: 17px;
+        font-weight: 700;
+      }
+
+      .kicker::before {
+        content: "";
+        width: 42px;
+        height: 1px;
+        background: currentColor;
+      }
+
+      h1,
+      h2,
+      h3,
+      p {
+        overflow-wrap: anywhere;
+      }
+
+      .hero h1 {
+        max-width: 780px;
+        margin: 0;
+        font-family: "Cormorant Infant", Georgia, serif;
+        font-size: clamp(54px, 11vw, 130px);
+        font-weight: 600;
+        line-height: 0.82;
+      }
+
+      .hero h1 .script {
+        display: block;
+        margin-top: clamp(6px, 1.4vw, 18px);
+        font-family: "Marck Script", cursive;
+        font-size: clamp(48px, 9vw, 104px);
+        font-weight: 400;
+        line-height: 0.95;
+      }
+
+      .hero-meta {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-top: 30px;
+      }
+
+      .meta-pill {
+        display: inline-flex;
+        min-height: 42px;
+        align-items: center;
+        gap: 9px;
+        padding: 9px 13px;
+        color: rgba(255, 250, 240, 0.94);
+        background: rgba(255, 250, 240, 0.12);
+        border: 1px solid rgba(255, 232, 173, 0.26);
+        border-radius: 999px;
+        backdrop-filter: blur(12px);
+        font-weight: 700;
+      }
+
+      .section {
+        padding: clamp(62px, 9vw, 118px) 28px;
+      }
+
+      .section-inner {
+        width: min(1120px, 100%);
+        margin: 0 auto;
+      }
+
+      .invitation {
+        position: relative;
+        background:
+          linear-gradient(90deg, transparent, rgba(255, 253, 248, 0.86) 10%, rgba(255, 253, 248, 0.86) 90%, transparent),
+          var(--cream);
+      }
+
+      .invitation-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) minmax(260px, 360px);
+        gap: clamp(32px, 7vw, 90px);
+        align-items: center;
+      }
+
+      .invite-text {
+        position: relative;
+        padding-left: clamp(18px, 4vw, 46px);
+      }
+
+      .invite-text::before {
+        content: "";
+        position: absolute;
+        top: 8px;
+        bottom: 8px;
+        left: 0;
+        width: 1px;
+        background: linear-gradient(var(--gold), rgba(185, 139, 45, 0.1));
+      }
+
+      .section-label {
+        margin: 0 0 12px;
+        color: var(--wine);
+        font-size: 15px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .invite-text h2,
+      .details h2,
+      .venue h2,
+      .map-section h2 {
+        margin: 0 0 22px;
+        font-family: "Cormorant Infant", Georgia, serif;
+        font-size: clamp(40px, 7vw, 74px);
+        font-weight: 600;
+        line-height: 0.94;
+      }
+
+      .invite-text p {
+        max-width: 680px;
+        margin: 0 0 18px;
+        font-size: clamp(21px, 3.2vw, 30px);
+        line-height: 1.38;
+      }
+
+      .signature {
+        margin-top: 30px;
+        color: var(--deep-gold);
+        font-family: "Marck Script", cursive;
+        font-size: clamp(34px, 6vw, 56px);
+        line-height: 1;
+      }
+
+      .date-panel {
+        min-height: 410px;
+        padding: 28px;
+        background:
+          linear-gradient(rgba(61, 45, 26, 0.18), rgba(61, 45, 26, 0.58)),
+          url("assets/golden-rings.jpg") center / cover;
+        border: 1px solid rgba(185, 139, 45, 0.36);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        color: var(--porcelain);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+      }
+
+      .date-panel .year {
+        align-self: flex-start;
+        padding: 7px 12px;
+        color: var(--ink);
+        background: rgba(255, 250, 240, 0.88);
+        border-radius: 999px;
+        font-weight: 700;
+      }
+
+      .date-panel .day {
+        font-family: "Cormorant Infant", Georgia, serif;
+        font-size: clamp(86px, 18vw, 150px);
+        font-weight: 700;
+        line-height: 0.74;
+      }
+
+      .date-panel .month {
+        display: block;
+        margin-top: 10px;
+        font-size: 25px;
+        font-weight: 700;
+      }
+
+      .details {
+        background: var(--porcelain);
+      }
+
+      .details-header {
+        display: flex;
+        align-items: end;
+        justify-content: space-between;
+        gap: 24px;
+        margin-bottom: 34px;
+      }
+
+      .details-header p {
+        max-width: 380px;
+        margin: 0;
+        color: rgba(61, 45, 26, 0.72);
+        line-height: 1.5;
+      }
+
+      .detail-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 14px;
+      }
+
+      .detail-card {
+        min-height: 168px;
+        padding: 22px;
+        background: var(--ivory);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        display: flex;
+        flex-direction: column;
+        gap: 18px;
+      }
+
+      .detail-card i {
+        width: 32px;
+        height: 32px;
+        color: var(--deep-gold);
+      }
+
+      .detail-card strong {
+        display: block;
+        margin-bottom: 5px;
+        color: var(--wine);
+        font-size: 15px;
+        text-transform: uppercase;
+      }
+
+      .detail-card span {
+        display: block;
+        font-size: clamp(20px, 2.7vw, 28px);
+        font-weight: 700;
+        line-height: 1.08;
+      }
+
+      .countdown {
+        margin-top: 14px;
+        padding: 22px;
+        background: linear-gradient(90deg, rgba(185, 139, 45, 0.13), rgba(115, 129, 107, 0.12));
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+      }
+
+      .countdown-label {
+        margin: 0 0 12px;
+        color: var(--wine);
+        font-size: 15px;
+        font-weight: 700;
+        text-transform: uppercase;
+      }
+
+      .countdown-grid {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 12px;
+      }
+
+      .time-box {
+        min-height: 84px;
+        display: grid;
+        align-content: center;
+        padding: 12px;
+        background: rgba(255, 253, 248, 0.76);
+        border: 1px solid rgba(185, 139, 45, 0.18);
+        border-radius: var(--radius);
+      }
+
+      .time-box b {
+        font-family: "Cormorant Infant", Georgia, serif;
+        font-size: clamp(36px, 6vw, 54px);
+        line-height: 0.9;
+      }
+
+      .time-box span {
+        color: rgba(61, 45, 26, 0.68);
+        font-size: 15px;
+        font-weight: 700;
+      }
+
+      .venue {
+        background: var(--cream);
+      }
+
+      .venue-layout {
+        display: grid;
+        grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+        gap: clamp(26px, 5vw, 54px);
+        align-items: center;
+      }
+
+      .venue-copy p {
+        margin: 0 0 22px;
+        font-size: clamp(20px, 2.8vw, 27px);
+        line-height: 1.45;
+      }
+
+      .venue-name {
+        color: var(--deep-gold);
+        font-family: "Cormorant Infant", Georgia, serif;
+        font-size: clamp(34px, 6vw, 62px);
+        font-weight: 700;
+        line-height: 0.95;
+      }
+
+      .venue-address {
+        margin-top: 18px;
+        color: rgba(61, 45, 26, 0.75);
+      }
+
+      .photo-pair {
+        display: grid;
+        grid-template-columns: 1fr 0.76fr;
+        gap: 12px;
+        align-items: stretch;
+      }
+
+      .photo-pair figure {
+        margin: 0;
+        overflow: hidden;
+        border: 1px solid rgba(185, 139, 45, 0.3);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+      }
+
+      .photo-pair img {
+        width: 100%;
+        height: 100%;
+        min-height: 360px;
+        display: block;
+        object-fit: cover;
+        transition: transform 600ms ease;
+      }
+
+      .photo-pair figure:hover img {
+        transform: scale(1.035);
+      }
+
+      .photo-pair figure:nth-child(2) {
+        transform: translateY(34px);
+      }
+
+      .map-section {
+        background: var(--porcelain);
+      }
+
+      .map-layout {
+        display: grid;
+        grid-template-columns: minmax(280px, 410px) minmax(0, 1fr);
+        gap: 22px;
+        align-items: stretch;
+      }
+
+      .map-copy {
+        padding: 28px;
+        background: var(--ivory);
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+      }
+
+      .map-copy p {
+        margin: 0 0 22px;
+        line-height: 1.5;
+      }
+
+      .map-frame {
+        position: relative;
+        height: 520px;
+        min-height: 520px;
+        overflow: hidden;
+        border: 1px solid var(--line);
+        border-radius: var(--radius);
+        box-shadow: var(--shadow);
+        background: #eadfcd;
+      }
+
+      #map {
+        width: 100%;
+        height: 100%;
+        min-height: 0;
+      }
+
+      .leaflet-container {
+        font-family: "Ysabeau", "Trebuchet MS", sans-serif;
+      }
+
+      .leaflet-popup-content-wrapper,
+      .leaflet-popup-tip {
+        color: var(--ink);
+        background: var(--porcelain);
+      }
+
+      .popup-title {
+        margin: 0 0 6px;
+        color: var(--deep-gold);
+        font-family: "Cormorant Infant", Georgia, serif;
+        font-size: 24px;
+        font-weight: 700;
+      }
+
+      .map-link {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-top: 10px;
+        color: var(--wine);
+        font-weight: 700;
+        text-decoration: none;
+      }
+
+      .footer {
+        padding: 44px 28px 58px;
+        text-align: center;
+        background: var(--cream);
+      }
+
+      .footer p {
+        margin: 0 auto;
+        max-width: 760px;
+        color: rgba(61, 45, 26, 0.75);
+        font-size: clamp(21px, 3vw, 30px);
+        line-height: 1.35;
+      }
+
+      .footer .names {
+        display: block;
+        margin-top: 16px;
+        color: var(--deep-gold);
+        font-family: "Marck Script", cursive;
+        font-size: clamp(34px, 6vw, 58px);
+      }
+
+      [data-reveal] {
+        opacity: 0;
+        transform: translateY(26px);
+        transition: opacity 700ms ease, transform 700ms ease;
+      }
+
+      [data-reveal].is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      @media (max-width: 980px) {
+        .hero {
+          min-height: 86svh;
+          padding: 22px;
+        }
+
+        .hero::after {
+          inset: 12px;
+        }
+
+        .topbar {
+          top: 22px;
+          width: min(100% - 44px, 1180px);
+        }
+
+        .gold-thread,
+        .invitation-layout,
+        .venue-layout,
+        .map-layout {
+          grid-template-columns: 1fr;
+        }
+
+        .anniversary-seal {
+          width: 138px;
+        }
+
+        .detail-grid {
+          grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+
+        .photo-pair figure:nth-child(2) {
+          transform: none;
+        }
+      }
+
+      @media (max-width: 680px) {
+        body {
+          font-size: 17px;
+        }
+
+        .hero {
+          min-height: 84svh;
+        }
+
+        .brand span {
+          display: none;
+        }
+
+        .hero-content {
+          padding-bottom: 36px;
+        }
+
+        .hero-meta {
+          margin-top: 24px;
+        }
+
+        .meta-pill {
+          width: 100%;
+          justify-content: center;
+        }
+
+        .section {
+          padding: 58px 18px;
+        }
+
+        .invite-text {
+          padding-left: 20px;
+        }
+
+        .detail-grid,
+        .countdown-grid,
+        .photo-pair {
+          grid-template-columns: 1fr;
+        }
+
+        .detail-card {
+          min-height: 140px;
+        }
+
+        .date-panel {
+          min-height: 350px;
+        }
+
+        .details-header {
+          align-items: flex-start;
+          flex-direction: column;
+        }
+
+        .map-copy {
+          padding: 22px;
+        }
+
+        .map-frame,
+        #map {
+          height: 430px;
+          min-height: 430px;
+        }
+
+        .button {
+          width: 100%;
+        }
+      }
+
+      @media (prefers-reduced-motion: reduce) {
+        *,
+        *::before,
+        *::after {
+          scroll-behavior: auto !important;
+          transition-duration: 1ms !important;
+          animation-duration: 1ms !important;
+          animation-iteration-count: 1 !important;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <main class="site-shell">
+      <section class="hero" aria-label="Главный экран приглашения">
+        <div class="topbar">
+          <a class="brand" href="#venue" aria-label="Перейти к месту проведения">
+            <img src="assets/sadea-logo.jpg" alt="SADEA" />
+            <span>11 июля 2026</span>
+          </a>
+          <div class="hero-actions">
+            <button class="icon-button" type="button" id="musicToggle" aria-label="Включить музыку">
+              <i data-lucide="music-2" aria-hidden="true"></i>
+            </button>
+            <a class="icon-button" href="#map-block" aria-label="Показать карту">
+              <i data-lucide="map-pin" aria-hidden="true"></i>
+            </a>
+          </div>
+        </div>
+
+        <div class="hero-content">
+          <div class="gold-thread">
+            <div class="anniversary-seal" aria-label="50 лет совместной жизни">
+              <div class="seal-inner">
+                <div>
+                  <span>50</span>
+                  <small>лет</small>
+                </div>
+              </div>
+            </div>
+            <div class="hero-copy">
+              <p class="kicker">Золотая свадьба и юбилей</p>
+              <h1>
+                Сыдык и Гуля
+                <span class="script">приглашают вас</span>
+              </h1>
+              <div class="hero-meta" aria-label="Краткие данные мероприятия">
+                <span class="meta-pill"><i data-lucide="calendar-days" aria-hidden="true"></i>11 июля 2026</span>
+                <span class="meta-pill"><i data-lucide="clock-3" aria-hidden="true"></i>17:00</span>
+                <span class="meta-pill"><i data-lucide="map-pin" aria-hidden="true"></i>SADEA, Алматы</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section invitation" id="invitation">
+        <div class="section-inner invitation-layout">
+          <div class="invite-text" data-reveal>
+            <p class="section-label">Приглашение</p>
+            <h2>Дорогие родные и близкие!</h2>
+            <p>
+              С огромной радостью приглашаем вас разделить с нами особенный день - юбилей Гули
+              и золотую свадьбу Сыдыка и Гули.
+            </p>
+            <p>Для нас будет большой честью разделить радость этих событий вместе с вами!</p>
+            <div class="signature">Сыдык и Гуля</div>
+          </div>
+
+          <aside class="date-panel" data-reveal aria-label="Дата мероприятия">
+            <span class="year">2026</span>
+            <div>
+              <div class="day">11</div>
+              <span class="month">июля, 17:00</span>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section class="section details" id="details">
+        <div class="section-inner">
+          <div class="details-header" data-reveal>
+            <div>
+              <p class="section-label">События вечера</p>
+              <h2>Два повода для радости</h2>
+            </div>
+            <p>Семейный вечер в честь большой даты, любви и теплых встреч с самыми близкими.</p>
+          </div>
+
+          <div class="detail-grid" data-reveal>
+            <article class="detail-card">
+              <i data-lucide="flower-2" aria-hidden="true"></i>
+              <div>
+                <strong>Юбилей Гули</strong>
+                <span>70 лет</span>
+              </div>
+            </article>
+            <article class="detail-card">
+              <i data-lucide="heart-handshake" aria-hidden="true"></i>
+              <div>
+                <strong>Золотая свадьба</strong>
+                <span>50 лет вместе</span>
+              </div>
+            </article>
+            <article class="detail-card">
+              <i data-lucide="calendar-heart" aria-hidden="true"></i>
+              <div>
+                <strong>Дата</strong>
+                <span>11 июля 2026</span>
+              </div>
+            </article>
+            <article class="detail-card">
+              <i data-lucide="clock" aria-hidden="true"></i>
+              <div>
+                <strong>Начало</strong>
+                <span>17:00</span>
+              </div>
+            </article>
+          </div>
+
+          <div class="countdown" data-reveal>
+            <p class="countdown-label">До встречи осталось</p>
+            <div class="countdown-grid">
+              <div class="time-box"><b id="days">00</b><span>дней</span></div>
+              <div class="time-box"><b id="hours">00</b><span>часов</span></div>
+              <div class="time-box"><b id="minutes">00</b><span>минут</span></div>
+              <div class="time-box"><b id="seconds">00</b><span>секунд</span></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section class="section venue" id="venue">
+        <div class="section-inner venue-layout">
+          <div class="venue-copy" data-reveal>
+            <p class="section-label">Место проведения</p>
+            <h2>Банкетно-ресторанный комплекс</h2>
+            <div class="venue-name">SADEA</div>
+            <p class="venue-address">пр. Серкебаева, 220а, Алматы</p>
+            <p>
+              Торжественный зал с мягким светом, золотыми деталями и пространством для большого
+              семейного вечера.
+            </p>
+            <a class="button secondary" href="#map-block">
+              <i data-lucide="map" aria-hidden="true"></i>
+              Посмотреть на карте
+            </a>
+          </div>
+          <div class="photo-pair" data-reveal aria-label="Фотографии ресторана SADEA">
+            <figure>
+              <img src="assets/sadea-hall.jpg" alt="Зал банкетно-ресторанного комплекса SADEA" />
+            </figure>
+            <figure>
+              <img src="assets/sadea-stage.jpg" alt="Сцена и декор банкетного зала SADEA" />
+            </figure>
+          </div>
+        </div>
+      </section>
+
+      <section class="section map-section" id="map-block">
+        <div class="section-inner map-layout">
+          <div class="map-copy" data-reveal>
+            <p class="section-label">Локация</p>
+            <h2>Как добраться</h2>
+            <p>
+              Банкетно-ресторанный комплекс «SADEA» находится по адресу: пр. Серкебаева, 220а.
+            </p>
+            <a
+              class="button"
+              href="https://2gis.kz/almaty/geo/70000001099177536/76.898017,43.216609"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <i data-lucide="external-link" aria-hidden="true"></i>
+              Открыть в 2ГИС
+            </a>
+          </div>
+          <div class="map-frame" data-reveal>
+            <div id="map" aria-label="Интерактивная карта SADEA"></div>
+          </div>
+        </div>
+      </section>
+
+      <footer class="footer">
+        <p>
+          Будем счастливы видеть вас рядом в этот важный день.
+          <span class="names">С любовью, Сыдык и Гуля</span>
+        </p>
+      </footer>
+    </main>
+
+    <script>
+      const locationUrl = "https://2gis.kz/almaty/geo/70000001099177536/76.898017,43.216609";
+      const eventDate = new Date("2026-07-11T17:00:00+05:00");
+
+      function initIcons() {
+        if (window.lucide) {
+          window.lucide.createIcons({
+            attrs: {
+              "stroke-width": 1.7
+            }
+          });
+        }
+      }
+
+      function initReveal() {
+        const elements = document.querySelectorAll("[data-reveal]");
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("is-visible");
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          { threshold: 0.14 }
+        );
+
+        elements.forEach((element) => observer.observe(element));
+      }
+
+      function updateCountdown() {
+        const now = new Date();
+        const diff = Math.max(0, eventDate.getTime() - now.getTime());
+        const seconds = Math.floor(diff / 1000);
+        const values = {
+          days: Math.floor(seconds / 86400),
+          hours: Math.floor((seconds % 86400) / 3600),
+          minutes: Math.floor((seconds % 3600) / 60),
+          seconds: seconds % 60
+        };
+
+        Object.entries(values).forEach(([key, value]) => {
+          const element = document.getElementById(key);
+          if (element) element.textContent = String(value).padStart(2, "0");
+        });
+      }
+
+      function initMap() {
+        if (!window.L) return;
+
+        const coords = [43.216609, 76.898017];
+        const map = window.L.map("map", {
+          dragging: true,
+          doubleClickZoom: true,
+          scrollWheelZoom: true,
+          tap: true,
+          touchZoom: true,
+          zoomControl: true
+        }).setView(coords, 15);
+
+        window.L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          maxZoom: 19,
+          attribution: "&copy; OpenStreetMap"
+        }).addTo(map);
+
+        const goldIcon = window.L.divIcon({
+          className: "gold-map-marker",
+          html:
+            "<div style='width:34px;height:34px;border-radius:50%;background:#8d641b;border:4px solid #fffaf0;box-shadow:0 10px 22px rgba(61,45,26,.32);'></div>",
+          iconSize: [34, 34],
+          iconAnchor: [17, 17]
+        });
+
+        const marker = window.L.marker(coords, { icon: goldIcon }).addTo(map);
+        marker.bindPopup(`
+          <p class="popup-title">SADEA</p>
+          <div>пр. Серкебаева, 220а</div>
+          <a class="map-link" href="${locationUrl}" target="_blank" rel="noopener noreferrer">Открыть в 2ГИС</a>
+        `);
+        marker.on("click", () => marker.openPopup());
+        setTimeout(() => map.invalidateSize(), 250);
+      }
+
+      function initMusic() {
+        const button = document.getElementById("musicToggle");
+        let audioContext;
+        let masterGain;
+        let intervalId;
+        let playing = false;
+        let gainConnected = false;
+        const notes = [261.63, 329.63, 392.0, 523.25, 440.0, 392.0, 329.63, 293.66];
+        let index = 0;
+
+        function playNote() {
+          if (!audioContext || !masterGain) return;
+          const now = audioContext.currentTime;
+          const oscillator = audioContext.createOscillator();
+          const gain = audioContext.createGain();
+
+          oscillator.type = "sine";
+          oscillator.frequency.value = notes[index % notes.length];
+          index += 1;
+
+          gain.gain.setValueAtTime(0, now);
+          gain.gain.linearRampToValueAtTime(0.08, now + 0.05);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + 1.15);
+
+          oscillator.connect(gain);
+          gain.connect(masterGain);
+          oscillator.start(now);
+          oscillator.stop(now + 1.2);
+        }
+
+        function stopMusic() {
+          playing = false;
+          clearInterval(intervalId);
+          intervalId = undefined;
+          button.setAttribute("aria-label", "Включить музыку");
+          button.innerHTML = '<i data-lucide="music-2" aria-hidden="true"></i>';
+          initIcons();
+        }
+
+        button.addEventListener("click", async () => {
+          if (playing) {
+            stopMusic();
+            return;
+          }
+
+          audioContext = audioContext || new (window.AudioContext || window.webkitAudioContext)();
+          if (audioContext.state === "suspended") await audioContext.resume();
+          masterGain = masterGain || audioContext.createGain();
+          masterGain.gain.value = 0.45;
+          if (!gainConnected) {
+            masterGain.connect(audioContext.destination);
+            gainConnected = true;
+          }
+
+          playing = true;
+          button.setAttribute("aria-label", "Остановить музыку");
+          button.innerHTML = '<i data-lucide="pause" aria-hidden="true"></i>';
+          initIcons();
+          playNote();
+          intervalId = setInterval(playNote, 760);
+        });
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        initIcons();
+        initReveal();
+        initMusic();
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+
+        window.addEventListener("load", () => {
+          initIcons();
+          initMap();
+        });
+      });
+    </script>
+  </body>
+</html>
